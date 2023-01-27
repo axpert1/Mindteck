@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="adapter"
+            type="com.app.mindteck.base.SimpleGenericRecyclerAdapter" />
+
+        <variable
+            name="slider"
+            type="com.app.mindteck.ui.main.adapter.ViewPagerAdapter" />
+
+        <variable
+            name="viewModel"
+            type="com.app.mindteck.ui.main.MainViewModel" />
+
+        <variable
+            name="isFocused"
+            type="Boolean" />
+
+        <variable
+            name="mainFragment"
+            type="com.app.mindteck.ui.main.MainFragment" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.main.MainFragment">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility='@{viewModel.loading ? View.VISIBLE : View.GONE}'
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ind_tab" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.error}"
+            android:visibility='@{viewModel.loading ? View.GONE : viewModel.countryList.empty ? View.VISIBLE :View.GONE}'
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ind_tab"
+            tools:text="@string/app_name" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:adapter="@{slider}"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/ind_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewPager"
+            app:tabBackground="@drawable/tab_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility='@{isFocused ? View.GONE :View.VISIBLE}'
+            app:constraint_referenced_ids="viewPager,ind_tab" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/ev_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:afterTextChanged="@{(text) -> mainFragment.onTextChanged(text)}"
+            android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ind_tab" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_country"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adapter="@{adapter}"
+            android:visibility='@{viewModel.loading ? View.GONE : viewModel.countryList.empty ? View.GONE :View.VISIBLE}'
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ev_search"
+            tools:itemCount="5"
+
+            tools:listitem="@layout/item_country" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
